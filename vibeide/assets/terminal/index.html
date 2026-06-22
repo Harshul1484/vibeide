@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; background: #1e1e1e; overflow: hidden; }
+  #terminal { width: 100%; height: 100%; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css">
+</head>
+<body>
+<div id="terminal"></div>
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+<script>
+const term = new Terminal({
+  theme: {
+    background: '#1e1e1e',
+    foreground: '#d4d4d4',
+    cursor: '#aeafad',
+    selectionBackground: '#264f78',
+    black: '#000000', red: '#cd3131', green: '#0dbc79',
+    yellow: '#e5e510', blue: '#2472c8', magenta: '#bc3fbc',
+    cyan: '#11a8cd', white: '#e5e5e5',
+    brightBlack: '#666666', brightRed: '#f14c4c',
+    brightGreen: '#23d18b', brightYellow: '#f5f543',
+    brightBlue: '#3b8eea', brightMagenta: '#d670d6',
+    brightCyan: '#29b8db', brightWhite: '#e5e5e5'
+  },
+  fontSize: 14,
+  fontFamily: 'Consolas, "Courier New", monospace',
+  cursorBlink: true,
+  cursorStyle: 'bar',
+  scrollback: 1000,
+  convertEol: true
+});
+
+const fitAddon = new FitAddon.FitAddon();
+term.loadAddon(fitAddon);
+term.open(document.getElementById('terminal'));
+
+// Turn off the soft-keyboard's autocorrect/autocapitalize/suggestions on
+// xterm's hidden input textarea — a terminal must receive keystrokes verbatim
+// (otherwise "rmdir" etc. gets "corrected" to a dictionary word).
+function hardenInput() {
+  document.querySelectorAll('.xterm-helper-textarea').forEach((ta) => {
+    ta.setAttribute('autocorrect', 'off');
+    ta.setAttribute('autocapitalize', 'none');
+    ta.setAttribute('autocomplete', 'off');
+    ta.setAttribute('spellcheck', 'false');
+    ta.setAttribute('inputmode', 'text');
+    // Hint to Gboard/Samsung keyboard: treat as code/no-suggestions.
+    ta.setAttribute('enterkeyhint', 'send');
+  });
+}
+hardenInput();
+// xterm may (re)create the textarea after layout/focus, so re-apply.
+setTimeout(hardenInput, 300);
+document.addEventListener('focusin', hardenInput);
+
+function fit() {
+  try { fitAddon.fit(); } catch(e) {}
+}
+fit();
+
+let ws = null;
+let wsReady = false;
+// Dart sets window.startDir to the active project's path before/after load.
+window.startDir = window.startDir || '';
+
+function connect() {
+  ws = new WebSocket('ws://127.0.0.1:7700/shell/pty');
+  ws.binaryType = 'arraybuffer';
+
+  ws.onopen = () => {
+    wsReady = true;
+    fit();
+    ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows }));
+    // If Dart already told us the project dir, cd into it now.
+    if (window.startDir) {
+      ws.send(JSON.stringify({ type: 'input', data: 'cd "' + window.startDir + '" && clear\n' }));
+    }
+  };
+
+  ws.onmessage = (e) => {
+    if (e.data instanceof ArrayBuffer) {
+      term.write(new Uint8Array(e.data));
+    } else {
+      term.write(e.data);
+    }
+  };
+
+  ws.onclose = () => {
+    wsReady = false;
+    term.write('\r\n\x1b[31m[disconnected — sandbox not running]\x1b[0m\r\n');
+    setTimeout(connect, 3000);
+  };
+
+  ws.onerror = () => {
+    ws.close();
+  };
+}
+
+connect();
+
+term.onData((data) => {
+  if (ws && wsReady) {
+    ws.send(JSON.stringify({ type: 'input', data }));
+  }
+});
+
+term.onResize(({ cols, rows }) => {
+  if (ws && wsReady) {
+    ws.send(JSON.stringify({ type: 'resize', cols, rows }));
+  }
+});
+
+window.addEventListener('resize', () => {
+  setTimeout(fit, 100);
+});
+
+// Flutter → JS bridge: called by Dart to trigger fit after panel resize
+window.flutterFit = () => fit();
+
+// Flutter → JS bridge: send an arbitrary command string to the PTY.
+// Retries until the WebSocket is ready.
+window.runCmd = (cmd) => {
+  let tries = 0;
+  const t = () => {
+    if (ws && wsReady) {
+      ws.send(JSON.stringify({ type: 'input', data: cmd + '\n' }));
+    } else if (tries++ < 50) {
+      setTimeout(t, 200);
+    }
+  };
+  t();
+};
+
+// Flutter → JS bridge: cd into the open project's dir and set a readable
+// prompt ({project}/relative-path # ). Retries until the WS is ready so it
+// works regardless of connect/load ordering.
+window.runCd = (dir, name) => {
+  if (!dir) return;
+  const proj = name || 'project';
+  let tries = 0;
+    const tryCd = () => {
+    if (ws && wsReady) {
+      // Alpine's shell is busybox ash. The project folder on disk is named by
+      // an internal id, so we don't want ${PWD##*/} at the root. Instead PS1
+      // shows the project NAME, plus the path *relative* to the project root
+      // when you cd deeper, e.g. "myapp # " or "myapp/js # ".
+      // We capture a real ESC byte (ash doesn't interpret \033) for colour.
+      const cmd =
+        "E=$(printf '\\033'); " +
+        "export VIBE_ROOT='" + dir + "'; " +
+        "export VIBE_NAME='" + proj + "'; " +
+        "export PS1=\"${E}[36m\\${VIBE_NAME}\\${PWD#\\$VIBE_ROOT}${E}[0m # \"; " +
+        "cd '" + dir + "' && clear\n";
+      ws.send(JSON.stringify({ type: 'input', data: cmd }));
+    } else if (tries++ < 50) {
+      setTimeout(tryCd, 200);
+    }
+  };
+  tryCd();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Worktrees
+.worktrees/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Local Claude session state (keep skills/config, drop transient)
+.claude/projects/
+.claude/todos/
+.claude/shell-snapshots/

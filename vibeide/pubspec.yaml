@@ -1,0 +1,42 @@
+name: vibeide
+description: "VibeIDE — VS Code-style mobile IDE for Android."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  re_editor: ^0.8.0
+  re_highlight: ^0.0.3
+  flutter_inappwebview: ^6.1.5
+  dio: ^5.4.3
+  flutter_web_auth_2: ^5.0.3
+  flutter_secure_storage: ^9.2.2
+  sqflite: ^2.3.3+1
+  path_provider: ^2.1.4
+  path: ^1.9.0
+  http: ^1.2.2
+  web_socket_channel: ^3.0.1
+  url_launcher: ^6.3.1
+  flutter_svg: ^2.0.10+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  sqflite_common_ffi: ^2.3.3
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/terminal/
+  fonts:
+    - family: codicon
+      fonts:
+        - asset: assets/fonts/codicon.ttf
