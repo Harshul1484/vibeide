@@ -1,4 +1,9 @@
-<h1 align="center">VibeIDE</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/logo/vibeide-horizontal-on-dark.svg">
+    <img alt="VibeIDE" src="docs/brand/logo/vibeide-horizontal.svg" width="360">
+  </picture>
+</h1>
 
 <p align="center">
   <strong>A VS Code-style IDE for Android, with a real Linux sandbox on the device<br>and an AI agent whose edits you review before they land.</strong>

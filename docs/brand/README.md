@@ -19,6 +19,7 @@
 | | File | Use it for |
 |---|---|---|
 | Primary | [`logo/vibeide-horizontal.svg`](logo/vibeide-horizontal.svg) | Headers, READMEs, websites, anywhere with horizontal room |
+| Primary, on dark | [`logo/vibeide-horizontal-on-dark.svg`](logo/vibeide-horizontal-on-dark.svg) | Same lockup with a white wordmark and the blue symbol, for dark backgrounds (e.g. GitHub dark mode) |
 | Stacked | [`logo/vibeide-stacked.svg`](logo/vibeide-stacked.svg) | Square spaces, splash screens, stickers |
 | Symbol | [`logo/vibeide-symbol.svg`](logo/vibeide-symbol.svg) | Avatars, app icon, when the name is already nearby |
 | Symbol, small sizes | [`logo/vibeide-symbol-small.svg`](logo/vibeide-symbol-small.svg) | Anything drawn under 48 px (heavier arms keep the gaps open) |
@@ -53,7 +54,7 @@ The palette is the app's own (`vibeide/lib/shared/theme.dart`).
 
 **Approved logo/background pairs**
 - Full colour on white.
-- All-white (`-white` files) on Editor Dark. For a blue accent on dark, use the dark app icon.
+- Blue symbol + white wordmark (`vibeide-horizontal-on-dark.svg`) or all-white (`-white` files) on Editor Dark.
 - White on VibeIDE Blue.
 - Black on white.
 
