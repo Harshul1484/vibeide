@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VibeIDE mark (docs/brand/logo/vibeide-symbol-small.svg) as an adaptive-icon foreground layer.
+     108dp canvas; the mark's farthest point is 30dp from the centre, inside the 33dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="22.88"
+        android:translateY="22.88"
+        android:scaleX="0.24"
+        android:scaleY="0.24">
+        <path
+            android:fillColor="#0078D4"
+            android:pathData="M95.43 146.59 L137 122.59 A18 18 0 0 0 119 91.41 L77.43 115.41 A18 18 0 0 0 95.43 146.59 Z M146 107 L146 59 A18 18 0 0 0 110 59 L110 107 A18 18 0 0 0 146 107 Z M148.11 125 L148.11 173 A18 18 0 0 0 184.11 173 L184.11 125 A18 18 0 0 0 148.11 125 Z M157.11 188.59 L198.67 212.59 A18 18 0 0 0 216.67 181.41 L175.11 157.41 A18 18 0 0 0 157.11 188.59 Z M140.46 181.41 L98.89 157.41 A18 18 0 0 0 80.89 188.59 L122.46 212.59 A18 18 0 0 0 140.46 181.41 Z M80.89 157.41 L39.33 181.41 A18 18 0 0 0 57.33 212.59 L98.89 188.59 A18 18 0 0 0 80.89 157.41 Z" />
+    </group>
+</vector>

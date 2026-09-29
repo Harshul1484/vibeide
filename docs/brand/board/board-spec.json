@@ -1,0 +1,42 @@
+{
+    "brand":  "VibeIDE",
+    "tagline":  "A real IDE in your pocket",
+    "brief":  "VibeIDE is a VS Code-style IDE for Android with a real Linux sandbox on the device and an AI agent whose edits you review before they land. The mark should feel like an AI-era product (a friendly, minimal sign) while staying in the app\u0027s own palette.",
+    "adjectives":  [
+                       "capable",
+                       "friendly",
+                       "in flow",
+                       "in control"
+                   ],
+    "criteria":  "Success: minimal and ownable like the AI marks the team admires, built on the app\u0027s #0078D4 accent, recognisable at 16 px, works in one colour and reversed.",
+    "industry":  "software",
+    "nav":  [
+                "Features",
+                "Download",
+                "GitHub"
+            ],
+    "brand_color":  "#0078D4",
+    "greyscale":  false,
+    "designer":  "VibeIDE",
+    "round":  4,
+    "concepts":  [
+                     {
+                         "name":  "Flock",
+                         "symbol":  "../logo/vibeide-symbol.svg",
+                         "lockup":  "../logo/vibeide-horizontal.svg",
+                         "idea":  "Three chevrons chasing each other around one centre: you, the AI and your code, moving as one.",
+                         "rationale":  [
+                                           "Rotational, living mark in the family of modern AI brand marks",
+                                           "Built entirely on the app\u0027s accent blue #0078D4",
+                                           "Arc-and-capsule geometry: one width, one radius, 120° symmetry",
+                                           "Heavier small-size cut keeps the gaps open at 16 px"
+                                       ]
+                     }
+                 ],
+    "recommendation":  "Flock: chosen direction. Symbol, lockups, app icons and web icons are delivered in docs/brand.",
+    "next_steps":  [
+                       "Swap the Android launcher icon for the new app icon",
+                       "Use the reversed lockup on dark surfaces (README, releases)",
+                       "Run a trademark search before commercial use"
+                   ]
+}
